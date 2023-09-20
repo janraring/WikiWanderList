@@ -128,7 +128,6 @@ body {
 
     display: flex;
     flex-direction: column;
-    /*align-items: center;*/
 }
 
 .body-center {
@@ -217,6 +216,7 @@ body {
     cursor: pointer;
 }
 
+
 /* CHECKBOX */
 
 .checkbox-wrapper {
@@ -261,8 +261,8 @@ body {
     top: 0;
     width: 100%;
     height: 2em;
-    background: #b7e6c9;
-    border-color: #2cbc63;
+    background: rgb(183, 230, 201);
+    border-color: rgb(44, 188, 99);
 }
 
 .checkbox-wrapper label,

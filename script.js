@@ -12,9 +12,9 @@ function init() {
 }
 
 function firstTimeInit() {
-    localStorage.setItem("dereadArticles", JSON.stringify([]));
+    localStorage.setItem("dereadArticles", '{ "entries" : []}');
     localStorage.setItem("dewikiLinkChart", '{ "entries" : []}');
-    localStorage.setItem("enreadArticles", JSON.stringify([]));
+    localStorage.setItem("enreadArticles", '{ "entries" : []}');
     localStorage.setItem("enwikiLinkChart", '{ "entries" : []}');
     lang = "de";
     startUpInit();
@@ -103,11 +103,8 @@ function fetchTopResult(results) {
     const result = results[0];
     const title = result.title;
 
-
     localStorage.setItem("pageLang", lang);
-    //localStorage.setItem("pageHref", result.href);
     localStorage.setItem("pageTitle", title);
-    //localStorage.setItem("pageId", lang+title);
 
     document.getElementById("pagetitle").innerHTML = `${title} &mdash; WikiWanderList`;
     return title;
@@ -132,7 +129,7 @@ function offerCheckbox() {
     const pageTitle = localStorage.getItem("pageTitle");
     const pageLang = localStorage.getItem("pageLang");
 
-    const readArticles = JSON.parse(localStorage.getItem(lang + "readArticles"));
+    const rawRead = localStorage.getItem(lang + "readArticles")
 
     const cb_wrapper = document.getElementById('cb-wrapper');
     const checkbox = document.getElementById('checkbox-read');
@@ -143,7 +140,7 @@ function offerCheckbox() {
         cb_wrapper.style.visibility = 'hidden';
     }
 
-    if (readArticles.indexOf(pageTitle) > -1) {
+    if (rawRead.indexOf(pageTitle) > -1) {
         checkbox.checked = true;
     } else {
         checkbox.checked = false;
@@ -201,6 +198,8 @@ function isGoodLink(link) {
         return false;
     } else if (link.indexOf("List_of") != -1) {
         return false;
+    } else if (link.indexOf("Liste ") != -1) {
+        return false;
     } else if (link.indexOf("Datei:") != -1) {
         return false;
     } else if (link.indexOf("Help:") != -1) {
@@ -224,14 +223,24 @@ function isDuplicate(jsonLinks, href) {
 
 function addCurrentArticle() {
     const pageTitle = localStorage.getItem("pageTitle");
-    let readArticles = JSON.parse(localStorage.getItem(lang + "readArticles"));
-    readArticles.push(pageTitle);
-    localStorage.setItem(lang + "readArticles", JSON.stringify(readArticles));
+    const pageLang = localStorage.getItem("pageLang");
+    const date = getDate();
 
-    let raw = localStorage.getItem(lang + "wikiLinkChart");
-    let jsonChart = JSON.parse(raw);
+    let rawRead = localStorage.getItem(pageLang + "readArticles");
+    let jsonRead = JSON.parse(rawRead);
+    jsonRead.entries.push({
+        "title": pageTitle,
+        "lang": pageLang,
+        "date": date
+    });
 
-    if (raw.indexOf(pageTitle) != -1) {
+    localStorage.setItem(pageLang + "readArticles", JSON.stringify(jsonRead));
+
+
+    let rawChart = localStorage.getItem(pageLang + "wikiLinkChart");
+    let jsonChart = JSON.parse(rawChart);
+
+    if (rawChart.indexOf(pageTitle) != -1) {
         for (var i = 0; i < jsonChart.entries.length; i++) {
             if (jsonChart.entries[i].title == pageTitle) {
                 jsonChart.entries.splice(i, 1);
@@ -239,14 +248,30 @@ function addCurrentArticle() {
         }
     }
 
-    localStorage.setItem(lang + "wikiLinkChart", JSON.stringify(jsonChart));
+    localStorage.setItem(pageLang + "wikiLinkChart", JSON.stringify(jsonChart));
+}
+
+function getDate(){
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0');
+    let yyyy = today.getFullYear();
+    return yyyy + "-" + mm + "-" + dd;
 }
 
 function removeCurrentArticle() {
     const pageTitle = localStorage.getItem("pageTitle");
-    let readArticles = JSON.parse(localStorage.getItem(lang + "readArticles"));
-    readArticles = readArticles.filter(value => { return value != pageTitle });
-    localStorage.setItem(lang + "readArticles", JSON.stringify(readArticles));
+    let rawRead = localStorage.getItem(lang + "readArticles")
+    let jsonRead = JSON.parse(rawRead);
+
+    for (i = 0; i < jsonRead.entries.length; i++) {
+        entry = jsonRead.entries[i];
+        if (entry.title == pageTitle) {
+            jsonRead.entries.splice(i, 1);
+        }
+    }
+
+    localStorage.setItem(lang + "readArticles", JSON.stringify(jsonRead));
 }
 
 function incrementPageCounts(jsonLinks) {
@@ -392,17 +417,17 @@ function compareByCount(a, b) {
     } else return 0;
 }
 
-function toEnglish(event) {
+function toEnglish() {
     lang = "en";
-    document.getElementById("en").style.backgroundColor = "rgb(136, 242, 164)";
+    document.getElementById("en").style.backgroundColor = "rgb(183, 230, 201)";
     document.getElementById("de").style.backgroundColor = "rgb(250, 251, 252)";
     offerCheckbox();
     refreshChart();
 }
 
-function zuDeutsch(event) {
+function zuDeutsch() {
     lang = "de";
-    document.getElementById("de").style.backgroundColor = "rgb(136, 242, 164)";
+    document.getElementById("de").style.backgroundColor = "rgb(183, 230, 201)";
     document.getElementById("en").style.backgroundColor = "rgb(250, 251, 252)";
     offerCheckbox();
     refreshChart();
