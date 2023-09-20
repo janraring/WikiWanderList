@@ -1,0 +1,77 @@
+<!-- Made with love by Jan Raring -->
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title id="pagetitle">WikiWanderList</title>
+    <script src=".\script.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet"
+        href="https://en.wikipedia.org/w/load.php?lang=en&amp;modules=ext.math.styles%7Cext.cite.parsoid.styles%7Cext.cite.styles%7Cmediawiki.skinning.content.parsoid%7Cmediawiki.skinning.interface%7Csite.styles&amp;only=styles&amp;skin=vector" />
+    <meta http-equiv="content-language" content="en" />
+    <meta http-equiv="vary" content="Accept" />
+    <base href="https://en.wikipedia.org/wiki/" />
+</head>
+
+
+<body lang="en" class="mw-content-ltr sitedir-ltr ltr mw-body-content parsoid-body mediawiki mw-parser-output"
+    dir="auto" onload="init()">
+
+    <header class="header">
+        <div class="supersearch">
+            <div class="wp-logo">
+                <img class="logo"
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Wikipedia-logo-v2.svg/657px-Wikipedia-logo-v2.svg.png"
+                    alt="Wikipedia Logo" />
+            </div>
+
+            <div class="notlogo">
+                <div class="language-select">
+                    <button class="lang-button" id="en">English</button>
+                    <button class="lang-button" id="de">Deutsch</button>
+                </div>
+
+                <div class="checkbox-wrapper" id="cb-wrapper">
+                    <input type="checkbox" class="js-checkbox-read" name="cb" id="checkbox-read" value="0" />
+                    <label for="checkbox-read">I have read this article</label>
+                </div>
+            </div>
+        </div>
+
+        <form class="search-form js-search-form">
+            <input placeholder="Type a keyword and press Enter to search" type="search"
+                class="search-input js-search-input" autofocus />
+        </form>
+    </header>
+
+    <div class="body-wrapper">
+        <div class="body-left">
+            <div class="chart" id="js-chart">
+
+            </div>
+        </div>
+
+        <div class="body-center">
+            <div class="loading-indicator">
+                <div class="sk-chase js-spinner hidden">
+                    <div class="sk-chase-dot"></div>
+                    <div class="sk-chase-dot"></div>
+                    <div class="sk-chase-dot"></div>
+                    <div class="sk-chase-dot"></div>
+                    <div class="sk-chase-dot"></div>
+                    <div class="sk-chase-dot"></div>
+                </div>
+            </div>
+
+            <article class="js-search-result"></article>
+        </div>
+
+        <div class="body-right">
+
+        </div>
+    </div>
+</body>
